@@ -1,0 +1,89 @@
+calculus-platform/
+├── docker-compose.yml          # postgres + backend + frontend
+├── .env.example                # переменные окружения
+├── README.md
+│
+├── backend/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── alembic.ini
+│   ├── alembic/                # миграции БД
+│   │   └── versions/
+│   ├── app/
+│   │   ├── main.py             # точка входа FastAPI, подключение роутеров, CORS
+│   │   ├── core/
+│   │   │   ├── config.py       # настройки (pydantic-settings)
+│   │   │   ├── security.py     # хеширование паролей, создание/проверка JWT
+│   │   │   └── deps.py         # зависимости: get_db, get_current_user, require_admin
+│   │   ├── db/
+│   │   │   ├── base.py         # Base для моделей
+│   │   │   ├── session.py      # engine и SessionLocal
+│   │   │   └── seed.py         # начальные темы и задачи
+│   │   ├── models/             # SQLAlchemy-модели (таблицы)
+│   │   │   ├── user.py
+│   │   │   ├── topic.py
+│   │   │   ├── lesson.py
+│   │   │   ├── task.py
+│   │   │   ├── attempt.py
+│   │   │   ├── progress.py
+│   │   │   └── saved_graph.py
+│   │   ├── schemas/            # Pydantic-схемы (вход/выход API)
+│   │   ├── crud/               # операции с БД
+│   │   ├── services/
+│   │   │   ├── checker.py      # проверка ответов через SymPy
+│   │   │   └── progress.py     # пересчёт прогресса пользователя
+│   │   └── api/
+│   │       ├── router.py       # сборка всех роутеров под /api/v1
+│   │       └── routes/
+│   │           ├── auth.py     # регистрация, вход, профиль
+│   │           ├── topics.py
+│   │           ├── lessons.py
+│   │           ├── tasks.py    # получение задач, отправка решений
+│   │           ├── progress.py
+│   │           ├── graphs.py   # сохранённые графики
+│   │           └── admin.py    # управление контентом и пользователями
+│   └── tests/
+│       ├── conftest.py
+│       ├── test_auth.py
+│       ├── test_tasks.py
+│       └── test_checker.py
+│
+└── frontend/
+    ├── Dockerfile
+    ├── package.json
+    ├── vite.config.js
+    ├── index.html
+    ├── public/
+    │   ├── manifest.webmanifest
+    │   └── icons/
+    └── src/
+        ├── main.jsx
+        ├── App.jsx             # маршруты (React Router)
+        ├── api/
+        │   ├── client.js       # axios/fetch с подстановкой JWT
+        │   └── endpoints.js
+        ├── context/
+        │   └── AuthContext.jsx
+        ├── components/
+        │   ├── Layout/         # шапка, меню, адаптивный каркас
+        │   ├── MathInput/      # ввод формулы + валидация через math.js
+        │   ├── Formula/        # обёртка над KaTeX
+        │   └── ProtectedRoute.jsx
+        ├── visualizations/     # главная изюминка проекта
+        │   ├── FunctionPlotter.jsx     # график f(x), зум, сетка
+        │   ├── DerivativeDemo.jsx      # касательная и ползунок точки
+        │   ├── LimitDemo.jsx           # предел, ε-δ
+        │   ├── RiemannSumDemo.jsx      # суммы Римана, площадь
+        │   └── SeriesDemo.jsx          # частичные суммы рядов
+        ├── pages/
+        │   ├── Home.jsx
+        │   ├── Login.jsx / Register.jsx
+        │   ├── Topics.jsx / TopicPage.jsx
+        │   ├── Trainer.jsx             # тренажёр задач
+        │   ├── Profile.jsx             # прогресс, сохранённые графики
+        │   └── admin/                  # панель администратора
+        │       ├── AdminTopics.jsx
+        │       ├── AdminTasks.jsx
+        │       └── AdminUsers.jsx
+        ├── hooks/
+        └── styles/
